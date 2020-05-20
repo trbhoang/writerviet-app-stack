@@ -36,10 +36,36 @@ sudo apt remove samba-common -y --purge
 sudo apt remove tmux -y --purge
 sudo apt remove telnet -y --purge
 sudo apt remove git-man -y --purge
-sudo apt remove tcpdump -y --purge
 sudo apt remove python-apt-common -y --purge
 
 sudo apt autoremove
+
+
+# Fix environment
+echo 'LC_ALL="en_US.UTF-8"' >> /etc/environment
+echo 'LC_CTYPE="en_US.UTF-8"' >> /etc/environment
+
+
+# Install essential packages
+apt-get dist-upgrade ; apt-get -y update ; apt-get -y upgrade
+apt-get -y install unattended-upgrades apt-transport-https ca-certificates curl software-properties-common gnupg # apache2-utils
+apt-get -y install htop
+
+
+# Install security updates automatically
+echo -e "APT::Periodic::Update-Package-Lists \"1\";\nAPT::Periodic::Unattended-Upgrade \"1\";\nUnattended-Upgrade::Automatic-Reboot \"false\";\n" > /etc/apt/apt.conf.d/20auto-upgrades
+/etc/init.d/unattended-upgrades restart
+
+
+# Change the timezone
+echo $TIMEZONE > /etc/timezone
+dpkg-reconfigure -f noninteractive tzdata
+
+
+# Change hostname
+hostnamectl set-hostname $HOST_NAME
+sed -i "1i 127.0.1.1 $HOST_DNS $HOST_NAME" /etc/hosts
+
 
 
 # Create admin user
@@ -72,35 +98,8 @@ echo "AllowTcpForwarding yes" | tee --append /etc/ssh/sshd_config
 echo "X11Forwarding no" | tee --append /etc/ssh/sshd_config
 echo "UseDNS no" | tee --append /etc/ssh/sshd_config
 
-
 # Reload SSH changes
 systemctl reload sshd
-
-
-# Fix environment
-echo 'LC_ALL="en_US.UTF-8"' >> /etc/environment
-echo 'LC_CTYPE="en_US.UTF-8"' >> /etc/environment
-
-
-# Install essential packages
-apt-get dist-upgrade ; apt-get -y update ; apt-get -y upgrade
-apt-get -y install unattended-upgrades # software-properties-common apache2-utils apt-transport-https
-apt-get -y install htop
-
-
-# Install security updates automatically
-echo -e "APT::Periodic::Update-Package-Lists \"1\";\nAPT::Periodic::Unattended-Upgrade \"1\";\nUnattended-Upgrade::Automatic-Reboot \"false\";\n" > /etc/apt/apt.conf.d/20auto-upgrades
-/etc/init.d/unattended-upgrades restart
-
-
-# Change the timezone
-echo $TIMEZONE > /etc/timezone
-dpkg-reconfigure -f noninteractive tzdata
-
-
-# Change hostname
-hostnamectl set-hostname $HOST_NAME
-sed -i "1i 127.0.1.1 $HOST_DNS $HOST_NAME" /etc/hosts
 
 
 
@@ -175,3 +174,16 @@ systemctl enable lfd
 
 # List csf firewall rules
 csf -l
+
+
+#
+# Install Docker
+#
+sudo apt remove docker docker-engine docker.io
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo apt-key fingerprint 0EBFCD88
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt update
+sudo apt install docker-ce
+sudo usermod -aG docker $USER
+docker run hello-world
