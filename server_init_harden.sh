@@ -185,7 +185,8 @@ sudo apt-key fingerprint 0EBFCD88
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 sudo apt update
 sudo apt install docker-ce
-sudo usermod -aG docker $USER
+sudo usermod -aG docker $USER  # may need to logout and login again
+newgrp docker
 docker run hello-world
 
 # Install docker-compose
