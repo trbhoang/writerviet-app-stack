@@ -17,6 +17,13 @@ $ cd /vagrant
 $ sudo ./server_init_harden.sh
 ```
 
+Start application services:
+
+```bash
+$ cd /docker
+$ docker-compose up
+```
+
 After finish:
 
 ```bash
