@@ -1,3 +1,5 @@
-.env*
+.env.sh
 .vagrant
 share
+logging/*/.env
+logging/log-server/elasticsearch/data

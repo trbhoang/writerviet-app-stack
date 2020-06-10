@@ -3,7 +3,7 @@
 
 $script = <<-SCRIPT
 echo I am provisioning...
-cd /vagrant
+cd /vagrant/setup
 sudo ./server_init_harden.sh
 sudo cp -rvf /vagrant/share/docker /docker
 sudo chown -R vagrant:vagrant /docker
@@ -37,6 +37,13 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 443, host: 8043
 
   config.vm.synced_folder ".", "/vagrant"
+
+  # require plugin https://github.com/leighmcculloch/vagrant-docker-compose
+  # config.vagrant.plugins = "vagrant-docker-compose"
+
+  # install docker and docker-compose
+  # config.vm.provision :docker
+  # config.vm.provision :docker_compose
 
   config.vm.provision "shell", inline: $script
 
