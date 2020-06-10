@@ -179,9 +179,14 @@ sudo apt-key fingerprint 0EBFCD88
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
 sudo apt-get update
 sudo apt-get install -y --no-install-recommends docker-ce
+
+# https://www.digitalocean.com/community/questions/how-to-fix-docker-got-permission-denied-while-trying-to-connect-to-the-docker-daemon-socket
 # switch to user SYSADMIN_USER ??? su $SYSADMIN_USER
-sudo usermod -aG docker $USER  # may need to logout and login again
-newgrp docker
+
+sudo groupadd docker
+sudo usermod -aG docker $SYSADMIN_USER  # may need to logout and login again
+sudo su
+su $SYSADMIN_USER
 docker run hello-world
 
 # Install docker-compose
