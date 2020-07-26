@@ -68,6 +68,12 @@ hostnamectl set-hostname $HOST_NAME
 sed -i "1i 127.0.1.1 $HOST_DNS $HOST_NAME" /etc/hosts
 
 
+# Disable ipv6
+echo "net.ipv6.conf.all.disable_ipv6 = 1" >> /etc/sysctl.conf
+echo "net.ipv6.conf.default.disable_ipv6 = 1" >> /etc/sysctl.conf
+echo "net.ipv6.conf.lo.disable_ipv6 = 1" >> /etc/sysctl.conf
+sudo sysctl -p
+
 
 # Create admin user
 adduser --disabled-password --gecos "Admin" $SYSADMIN_USER
@@ -86,14 +92,23 @@ chmod 600 /home/$SYSADMIN_USER/.ssh/authorized_keys
 chown -R $SYSADMIN_USER:$SYSADMIN_USER /home/$SYSADMIN_USER/.ssh
 
 # Disable password login for this user
-# Optional
 echo "PasswordAuthentication no" | tee --append /etc/ssh/sshd_config
 echo "PermitEmptyPasswords no" | tee --append /etc/ssh/sshd_config
 echo "PermitRootLogin no" | tee --append /etc/ssh/sshd_config
+
 echo "Protocol 2" | tee --append /etc/ssh/sshd_config
-# configure idle timeout interval
-echo "ClientAliveInterval 360" | tee --append /etc/ssh/sshd_config
-echo "ClientAliveCountMax 0" | tee --append /etc/ssh/sshd_config
+# Have only 1m to successfully login
+echo "LoginGraceTime 1m" | tee --append /etc/ssh/sshd_config
+
+if [ $APP_ENV == 'production' ]
+then
+    # Only allow specific user to login
+    echo "AllowUsers $SYSADMIN_USER" | tee --append /etc/ssh/sshd_config
+    # configure idle timeout interval (10 mins)
+    echo "ClientAliveInterval 600" | tee --append /etc/ssh/sshd_config
+    echo "ClientAliveCountMax 3" | tee --append /etc/ssh/sshd_config
+fi
+
 # disable port forwarding (yes: to support connecting from localhost)
 echo "AllowTcpForwarding yes" | tee --append /etc/ssh/sshd_config
 echo "X11Forwarding no" | tee --append /etc/ssh/sshd_config
@@ -126,50 +141,6 @@ systemctl restart sendmail
 echo "Subject: sendmail test" | sendmail -v $SYSADMIN_EMAIL
 
 
-
-### Firewall & login monitoring (csf, lfd)
-
-# Install & configure CSF (https://www.configserver.com/cp/csf.html)
-apt-get -y --no-install-recommends install libwww-perl
-cd /usr/src/
-wget https://download.configserver.com/csf.tgz
-tar -xzf csf.tgz
-cd csf
-sh install.sh
-cd /usr/local/csf/bin/
-perl csftest.pl
-# Custom some csf settings
-sed -i 's/TESTING = "1"/TESTING = "0"/g' /etc/csf/csf.conf
-sed -i 's/SMTP_BLOCK = "0"/SMTP_BLOCK = "1"/g' /etc/csf/csf.conf
-sed -i 's/PT_SKIP_HTTP = "0"/PT_SKIP_HTTP = "1"/g' /etc/csf/csf.conf
-sed -i 's/PT_USERPROC = "10"/PT_USERPROC = "15"/g' /etc/csf/csf.conf
-sed -i 's/IGNORE_ALLOW = "0"/IGNORE_ALLOW = "1"/g' /etc/csf/csf.conf
-# Disallow incomming PING
-sed -i 's/ICMP_IN = "1"/ICMP_IN = "0"/g' /etc/csf/csf.conf
-sed -i 's/LF_ALERT_TO = ""/LF_ALERT_TO = "'$SYSADMIN_EMAIL'"/g' /etc/csf/csf.conf
-# Oply allowed these TCP ports: 22, 80, 443
-sed -i 's/TCP_IN = "20,21,22,25,53,80,110,143,443,465,587,993,995"/TCP_IN = "22,80,443"/g' /etc/csf/csf.conf
-sed -i 's/TCP_OUT = "20,21,22,25,53,80,110,113,443,587,993,995"/TCP_OUT = "22,80,443"/g' /etc/csf/csf.conf
-sed -i 's/UDP_IN = "20,21,53"/UDP_IN = ""/g' /etc/csf/csf.conf
-sed -i 's/UDP_OUT = "20,21,53,113,123"/UDP_OUT = ""/g' /etc/csf/csf.conf
-# disable LFD excessive resource usage alert
-# ref: https://www.interserver.net/tips/kb/disable-lfd-excessive-resource-usage-alert/
-sed -i 's/PT_USERMEM = "512"/PT_USERMEM = "0"/g' /etc/csf/csf.conf
-sed -i 's/PT_USERTIME = "1800"/PT_USERTIME = "0"/g' /etc/csf/csf.conf
-# Ignore alert if following process use exeeded resource
-echo "exe:/usr/sbin/rsyslogd" | tee --append /etc/csf/csf.pignore
-echo "exe:/lib/systemd/systemd-networkd" | tee --append /etc/csf/csf.pignore
-echo "exe:/usr/sbin/atd" | tee --append /etc/csf/csf.pignore
-echo "exe:/lib/systemd/systemd" | tee --append /etc/csf/csf.pignore
-echo "exe:/lib/systemd/systemd-resolved" | tee --append /etc/csf/csf.pignore
-systemctl start csf
-systemctl start lfd
-systemctl enable csf
-systemctl enable lfd
-# List csf firewall rules
-csf -l
-
-
 #
 # Install Docker
 #
@@ -184,9 +155,9 @@ sudo apt-get install -y --no-install-recommends docker-ce
 # switch to user SYSADMIN_USER ??? su $SYSADMIN_USER
 
 sudo groupadd docker
-sudo usermod -aG docker $SYSADMIN_USER  # may need to logout and login again
-sudo su
-su $SYSADMIN_USER
+sudo usermod -aG docker $USER $SYSADMIN_USER  # may need to logout and login again
+# sudo su
+# su $SYSADMIN_USER
 docker run hello-world
 
 # Install docker-compose

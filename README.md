@@ -10,7 +10,7 @@ Script to run right after get a server up and running
 Start a Vagrant box to test:
 
 ```bash
-$ cd infra
+$ cd infrastructure
 $ vagrant up
 $ vagrant ssh
 $ cd /vagrant
@@ -20,7 +20,7 @@ $ sudo ./server_init_harden.sh
 Start application services:
 
 ```bash
-$ cd /docker
+$ cd infrastructure/app-stack
 $ docker-compose up
 ```
 

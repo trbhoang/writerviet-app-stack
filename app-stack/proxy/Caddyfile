@@ -1,0 +1,20 @@
+localhost
+
+log {
+    output file /var/log/access.log
+}
+
+handle /demchu/* {
+    root * /var/www
+    file_server
+    encode zstd gzip
+}
+
+handle {
+    root * /var/www/forum
+    file_server {
+        hide .*
+    }
+    encode zstd gzip
+    php_fastcgi app:9000
+}
