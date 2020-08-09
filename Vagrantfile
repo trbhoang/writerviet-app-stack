@@ -5,19 +5,28 @@ $script = <<-SCRIPT
 echo I am provisioning...
 cd /vagrant/setup
 sudo ./server_init_harden.sh
+sudo adduser --system --no-create-home --shell /bin/false --group --disabled-login mysql
+
+# sudo cp -rvf /vagrant/app-stack /home/admin/
+# sudo chown -R mysql:mysql /home/admin/app-stack/db/db-data
+# cd /home/admin/app-stack
+# docker-compose up
+
 # sudo cp -rvf /vagrant/share/docker /docker
 # sudo chown -R vagrant:vagrant /docker
 # sudo adduser --system --no-create-home --shell /bin/false --group --disabled-login mysql
 # sudo chown -R mysql:mysql /docker/db/db-data
+# sudo chmod 0777 forum/data
+# chmod 0777 forum/internal_data
 SCRIPT
 
 Vagrant.configure("2") do |config|
   # Base VM OS configuration.
   config.vm.box = "ubuntu/bionic64"
-  config.vm.name = "writerviet-infra"
 
   # General VirtualBox VM configuration.
   config.vm.provider :virtualbox do |v|
+    v.name = "writerviet-infra"
     v.memory = 1024
     v.cpus = 2
     v.linked_clone = true

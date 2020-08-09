@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   proxy:
-    image: caddy:2.0.0-alpine
+    image: caddy:2.1.1-alpine
     volumes:
       - ./proxy/Caddyfile:/etc/caddy/Caddyfile
       - ./backend/app:/var/www

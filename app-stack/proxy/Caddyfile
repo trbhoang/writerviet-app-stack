@@ -1,4 +1,4 @@
-localhost
+writerviet.local
 
 log {
     output file /var/log/access.log
