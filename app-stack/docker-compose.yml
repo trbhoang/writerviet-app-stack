@@ -4,7 +4,7 @@ services:
     image: caddy:2.1.1-alpine
     volumes:
       - ./proxy/Caddyfile:/etc/caddy/Caddyfile
-      - ./backend/app:/var/www
+      - ./app/source:/var/www
       - ./proxy/caddy_data:/data
       - ./proxy/caddy_config:/config
       - ./proxy/log:/var/log
@@ -15,15 +15,15 @@ services:
       - app
 
   app:
-    build: backend
+    build: app
     volumes:
-      - ./backend/app:/var/www
-      - ./backend/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
+      - ./app/source:/var/www
+      - ./app/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
     depends_on:
       - db
 
   db:
-    image: mariadb:10.4
+    build: db
     restart: always
     volumes:
       - ./db/db-data:/var/lib/mysql

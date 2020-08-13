@@ -22,18 +22,18 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg && \
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# # Add user for laravel application
-# RUN groupadd -g 1000 www
-# RUN useradd -u 1000 -ms /bin/bash -g www www
+# Create a user and group on the container and use this user to run container
+# then assign appropriate permission for this GID on host
+RUN groupadd -g 2001 mygroup
+RUN adduser --disabled-password --gecos "" --force-badname --ingroup mygroup myuser
 
-# # Copy existing application directory contents
-# COPY . /var/www
+# Set file permission for volumes on host
+# chown -R root:2001 /data/myvolume
+# chmod -R 775 /data/myvolume
+# chmod g+s /data/myvolume
 
-# # Copy existing application directory permissions
-# COPY --chown=www:www . /var/www
-
-# # Change current user to www
-# USER www
+# Change current user to myuser
+USER myuser
 
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000

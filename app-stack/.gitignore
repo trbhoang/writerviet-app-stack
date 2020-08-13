@@ -1,5 +1,5 @@
 db/db-data
-backend/app
+app/source
 proxy/caddy_config
 proxy/caddy_data
 proxy/log
