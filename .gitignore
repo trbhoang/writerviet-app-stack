@@ -1,5 +1,5 @@
 .env.sh
 .vagrant
 share
-logging-stack/*/.env
-logging-stack/log-server/elasticsearch/data
+logging_stack/*/.env
+logging_stack/log-server/elasticsearch/data

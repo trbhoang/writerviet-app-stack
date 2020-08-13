@@ -26,4 +26,4 @@ services:
     build: db
     restart: always
     volumes:
-      - ./db/db-data:/var/lib/mysql
+      - ./db/db_data:/var/lib/mysql

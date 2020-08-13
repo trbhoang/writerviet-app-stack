@@ -3,19 +3,24 @@
 
 $script = <<-SCRIPT
 echo I am provisioning...
+
 cd /vagrant/setup
 sudo ./server_init_harden.sh
-sudo adduser --system --no-create-home --shell /bin/false --group --disabled-login mysql
+sudo cp -rvf /vagrant/app_stack /home/admin/
+cd /home/admin/app_stack
 
-# sudo cp -rvf /vagrant/app-stack /home/admin/
-# sudo chown -R mysql:mysql /home/admin/app-stack/db/db-data
-# cd /home/admin/app-stack
-# docker-compose up
+echo Set correct permissions for volumes
 
-# sudo cp -rvf /vagrant/share/docker /docker
-# sudo chown -R vagrant:vagrant /docker
-# sudo adduser --system --no-create-home --shell /bin/false --group --disabled-login mysql
-# sudo chown -R mysql:mysql /docker/db/db-data
+chown -R root:2001 app/source
+chmod -R 775 app/source
+chmod g+s app/source
+
+chown -R root:2001 db/db_data
+chmod -R 775 db/db_data
+chmod g+s db/db_data
+
+docker-compose up
+
 # sudo chmod 0777 forum/data
 # chmod 0777 forum/internal_data
 SCRIPT
