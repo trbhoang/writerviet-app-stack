@@ -1,8 +1,6 @@
 writerviet.local
 
-# log {
-#     output file /var/log/access.log
-# }
+log
 
 handle /demchu/* {
     root * /var/www
