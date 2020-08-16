@@ -11,9 +11,9 @@ services:
       # named volume, this is used to persist the registry file between restarts, so to avoid data duplication
       - filebeat_data:/usr/share/filebeat/data
       # needed to access all docker logs (read only)
-      - /var/lib/docker/containers:/usr/share/dockerlogs/data:ro
+      - /var/lib/docker/containers/:/var/lib/docker/containers:ro
       # needed to access additional informations about containers
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     restart: on-failure
 
 volumes:

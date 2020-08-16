@@ -1,21 +1,29 @@
-filebeat.inputs:
-  #------------------------------ Container input --------------------------------
-  - type: container
-    enabled: true
+# filebeat.inputs:
+#   #------------------------------ Container input --------------------------------
+#   - type: container
+#     enabled: true
 
-    # Paths for container logs that should be crawled and fetched.
-    paths:
-      - /var/lib/docker/containers/*/*.log
+#     # Paths for container logs that should be crawled and fetched.
+#     paths:
+#       - /usr/share/filebeat/dockerlogs/*/*.log
 
-    # Configure stream to filter to a specific stream: stdout, stderr or all (default)
-    stream: all
+#     processors:
+#       - add_docker_metadata: ~
+
+# Configure stream to filter to a specific stream: stdout, stderr or all (default)
+# stream: all
 
 filebeat.autodiscover:
   providers:
     - type: docker
-
-processors:
-  - add_docker_metadata: ~
+      templates:
+        - condition:
+            contains:
+              docker.container.image: caddy
+          config:
+            - type: container
+              paths:
+                - /var/lib/docker/containers/${data.docker.container.id}/*.log
 
 # #----------------------------- Logstash output ---------------------------------
 # output.logstash:
@@ -32,3 +40,6 @@ output.console:
   codec.json:
     # Pretty-print JSON event
     pretty: false
+
+# Write Filebeat own logs only to file to avoid catching them with itself in docker log files
+logging.to_files: true

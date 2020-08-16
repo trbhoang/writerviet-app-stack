@@ -165,6 +165,9 @@ sudo wget "https://github.com/docker/compose/releases/download/1.25.5/docker-com
 sudo chmod +x /usr/local/bin/docker-compose
 docker-compose --version
 
+# Otherwise filebeat cannot access docker's logs
+sudo chmod 666 /var/run/docker.sock
+
 
 #
 # Install Fail2ban
