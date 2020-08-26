@@ -1,13 +1,12 @@
 version: "3.7"
 services:
   proxy:
-    image: caddy:2.1.1-alpine
+    build: proxy
     volumes:
       - ./proxy/Caddyfile:/etc/caddy/Caddyfile
-      - ./app/source:/var/www
       - ./proxy/caddy_data:/data
       - ./proxy/caddy_config:/config
-      - ./proxy/log:/var/log
+      - ./app/source:/var/www
     ports:
       - 80:80
       - 443:443

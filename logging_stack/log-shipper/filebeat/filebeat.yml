@@ -1,25 +1,24 @@
-# filebeat.inputs:
-#   #------------------------------ Container input --------------------------------
-#   - type: container
-#     enabled: true
-
-#     # Paths for container logs that should be crawled and fetched.
-#     paths:
-#       - /usr/share/filebeat/dockerlogs/*/*.log
-
-#     processors:
-#       - add_docker_metadata: ~
-
-# Configure stream to filter to a specific stream: stdout, stderr or all (default)
-# stream: all
-
 filebeat.autodiscover:
   providers:
     - type: docker
       templates:
         - condition:
             contains:
-              docker.container.image: caddy
+              docker.container.image: _proxy
+          config:
+            - type: container
+              paths:
+                - /var/lib/docker/containers/${data.docker.container.id}/*.log
+        - condition:
+            contains:
+              docker.container.image: _app
+          config:
+            - type: container
+              paths:
+                - /var/lib/docker/containers/${data.docker.container.id}/*.log
+        - condition:
+            contains:
+              docker.container.image: _db
           config:
             - type: container
               paths:
