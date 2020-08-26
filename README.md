@@ -1,30 +1,34 @@
-# Infrastructure related stuffs
+# WriterViet tech stack
 
-## server_init_harden.sh
+## Init and harden server
 
-Script to run right after get a server up and running
+### Setup
+
+- Change to setup directory and run `./server_init_harden.sh`
+
+### What this script does
 
 - Uninstall unneeded services / packages such as `amazon-ssm-agent, snapd, lxcfs`...
-- Install/setup bare essential stuffs: `create admin user, ssh, automatically security updates, sendmail, firewall & login monitoring`
+- Install/setup bare essential stuffs: `create admin user, ssh, automatically security updates, sendmail, firewall & fail2ban`
 
-Start a Vagrant box to test:
+### Setup local server to test
 
 ```bash
-$ cd infrastructure
+$ cd tech-stack
 $ vagrant up
 $ vagrant ssh
-$ cd /vagrant
+$ cd /vagrant/setup
 $ sudo ./server_init_harden.sh
 ```
 
-Start application services:
+### Start application services
 
 ```bash
-$ cd infrastructure/app-stack
+$ cd tech-stack/app_stack
 $ docker-compose up
 ```
 
-After finish:
+### Clear testing
 
 ```bash
 $ vagrant destroy
