@@ -1,0 +1,12 @@
+[sources.in]
+  type = "docker" # required
+
+[sinks.out]
+  # out to console
+  encoding.codec = "json" # required
+  inputs = ["in"] # required
+  type = "console" # required
+
+  # # out to elasticsearch
+  # inputs = ["in"] # required
+  # type = "elasticsearch" # required

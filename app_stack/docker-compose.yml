@@ -38,9 +38,16 @@ services:
 
   logger:
     build: logger
+    volumes:
+      - ./logger/vector.toml:/etc/vector/vector.toml:ro
+      # named volume, this is used to persist vector data between restarts
+      - vector_data:/var/lib/vector
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: on-failure
 
 volumes:
-  restic_cache:
   caddy_config:
   caddy_data:
   db_data:
+  restic_cache:
+  vector_data:

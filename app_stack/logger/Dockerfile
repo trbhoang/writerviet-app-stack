@@ -1,0 +1,1 @@
+FROM timberio/vector:0.10.0-alpine
