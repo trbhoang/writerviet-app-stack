@@ -3,21 +3,21 @@ services:
   proxy:
     build: proxy
     volumes:
+      - ./web/source:/var/www
       - ./proxy/Caddyfile:/etc/caddy/Caddyfile
-      - ./proxy/caddy_data:/data
-      - ./proxy/caddy_config:/config
-      - ./app/source:/var/www
+      - caddy_data:/data
+      - caddy_config:/config
     ports:
       - 80:80
       - 443:443
     depends_on:
-      - app
+      - web
 
-  app:
-    build: app
+  web:
+    build: web
     volumes:
-      - ./app/source:/var/www
-      - ./app/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
+      - ./web/source:/var/www
+      - ./web/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
     depends_on:
       - db
 
@@ -25,4 +25,17 @@ services:
     build: db
     restart: always
     volumes:
-      - ./db/db_data:/var/lib/mysql
+      - db_data:/var/lib/mysql
+
+  backup:
+    build: backup
+    volumes:
+
+  logger:
+    build: logger
+
+volumes:
+  restic_cache:
+  caddy_config:
+  caddy_data:
+  db_data:
