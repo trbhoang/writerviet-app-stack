@@ -4,12 +4,10 @@ start=`date +%s`
 
 echo "Starting Backup at $(date +"%Y-%m-%d %H:%M:%S")"
 echo "BACKUP_CRON: ${BACKUP_CRON}"
-echo "RESTIC_TAG: ${RESTIC_TAG}"
 echo "RESTIC_FORGET_ARGS: ${RESTIC_FORGET_ARGS}"
 echo "RESTIC_JOB_ARGS: ${RESTIC_JOB_ARGS}"
 
-
-restic backup /data ${RESTIC_JOB_ARGS} --tag=${RESTIC_TAG?"Missing environment variable RESTIC_TAG"} 2>&1
+restic backup /data ${RESTIC_JOB_ARGS} 2>&1
 rc=$?
 echo "Finished backup at $(date)"
 if [[ $rc == 0 ]]; then

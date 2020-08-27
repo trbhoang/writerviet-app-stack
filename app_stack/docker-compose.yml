@@ -29,7 +29,12 @@ services:
 
   backup:
     build: backup
+    env_file:
+      - .env
     volumes:
+      - restic_cache:/root/.cache/restic
+      - /var/lib/docker/volumes:/data/volumes
+    restart: always
 
   logger:
     build: logger
