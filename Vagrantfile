@@ -11,18 +11,25 @@ cd /home/admin/app_stack
 
 echo Set correct permissions for volumes
 
-chown -R root:2001 app/source
-chmod -R 775 app/source
-chmod g+s app/source
+# chown -R root:2000 db/db_data
+# chmod -R 775 db/db_data
+# chmod g+s db/db_data
 
-chown -R root:2001 db/db_data
-chmod -R 775 db/db_data
-chmod g+s db/db_data
+# chown -R root:2001 app/source
+# chmod -R 775 app/source
+# chmod g+s app/source
 
-docker-compose up
+# docker-compose up
 
 # sudo chmod 0777 forum/data
 # chmod 0777 forum/internal_data
+
+# initialize db data volume
+cd /home/admin/app_stack/db/db_data
+docker run --mount type=volume,source=wv_dbdata,target=/data --name helper alpine
+sudo docker cp . helper:/data
+docker rm helper
+
 SCRIPT
 
 Vagrant.configure("2") do |config|
@@ -31,7 +38,7 @@ Vagrant.configure("2") do |config|
 
   # General VirtualBox VM configuration.
   config.vm.provider :virtualbox do |v|
-    v.name = "writerviet-infra"
+    v.name = "writerviet-tech-stack"
     v.memory = 1024
     v.cpus = 2
     v.linked_clone = true
