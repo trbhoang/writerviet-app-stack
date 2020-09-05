@@ -1,12 +1,12 @@
 version: "3.7"
 services:
   proxy:
-    build: proxy
+    image: caddy:2.1.1-alpine
     volumes:
-      - ./web/source:/var/www
-      - ./proxy/Caddyfile:/etc/caddy/Caddyfile
-      - caddy_data:/data
-      - caddy_config:/config
+      - websource:/var/www
+      - caddyfile:/etc/caddy
+      - caddydata:/data
+      - caddyconfig:/config
     ports:
       - 80:80
       - 443:443
@@ -16,38 +16,47 @@ services:
   web:
     build: web
     volumes:
-      - ./web/source:/var/www
-      - ./web/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
+      - websource:/var/www
+      - phpconf:/usr/local/etc/php/conf.d
     depends_on:
       - db
 
   db:
-    build: db
-    restart: always
+    image: mariadb:10.4
     volumes:
-      - db_data:/var/lib/mysql
+      - dbdata:/var/lib/mysql
+    restart: always
 
   backup:
     build: backup
     env_file:
-      - .env
+      - ./backup/.env
     volumes:
-      - restic_cache:/root/.cache/restic
-      - /var/lib/docker/volumes:/data/volumes
+      - resticcache:/root/.cache/restic
+      - dbdata:/data/volumes/dbdata:ro
+      - websource:/data/volumes/websource:ro
+      - caddyfile:/data/volumes/caddyfile:ro
+      - caddydata:/data/volumes/caddydata:ro
+      - caddyconfig:/data/volumes/caddyconfig:ro
+      - phpconf:/data/volumes/phpconf:ro
+      - vectorconfig:/data/volumes/vectorconfig:ro
     restart: always
 
   logger:
-    build: logger
+    image: timberio/vector:0.10.0-alpine
     volumes:
-      - ./logger/vector.toml:/etc/vector/vector.toml:ro
-      # named volume, this is used to persist vector data between restarts
-      - vector_data:/var/lib/vector
+      - vectorconfig:/etc/vector
+      - vectordata:/var/lib/vector
       - /var/run/docker.sock:/var/run/docker.sock:ro
     restart: on-failure
 
 volumes:
-  caddy_config:
-  caddy_data:
-  db_data:
-  restic_cache:
-  vector_data:
+  dbdata:
+  websource:
+  caddyfile:
+  caddydata:
+  caddyconfig:
+  phpconf:
+  vectorconfig:
+  vectordata:
+  resticcache:

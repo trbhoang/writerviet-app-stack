@@ -9,7 +9,7 @@ ENV BACKUP_CRON="0 */6 * * *"
 ENV RESTIC_FORGET_ARGS=""
 ENV RESTIC_JOB_ARGS=""
 
-COPY backup.sh /bin/backup
+COPY backup.sh /backup.sh
 COPY entry.sh /entry.sh
 
 WORKDIR "/"

@@ -14,5 +14,5 @@ handle {
         hide .*
     }
     encode zstd gzip
-    php_fastcgi app:9000
+    php_fastcgi web:9000
 }

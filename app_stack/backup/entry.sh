@@ -2,7 +2,7 @@
 
 echo "Starting container ..."
 echo "Setup backup cron job with cron expression BACKUP_CRON: ${BACKUP_CRON}"
-echo "${BACKUP_CRON} /bin/backup 2>&1" > /var/spool/cron/crontabs/root
+echo "${BACKUP_CRON} /backup.sh 2>&1" > /var/spool/cron/crontabs/root
 
 restic snapshots &>/dev/null
 status=$?

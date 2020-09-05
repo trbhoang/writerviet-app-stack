@@ -6,8 +6,8 @@ echo I am provisioning...
 
 cd /vagrant/setup
 sudo ./server_init_harden.sh
-sudo cp -rvf /vagrant/app_stack /home/admin/
-cd /home/admin/app_stack
+sudo cp -rvf /vagrant/app_stack /home/admin/writerviet
+cd /home/admin/writerviet
 
 echo Set correct permissions for volumes
 
@@ -25,9 +25,27 @@ echo Set correct permissions for volumes
 # chmod 0777 forum/internal_data
 
 # initialize db data volume
-cd /home/admin/app_stack/db/db_data
-docker run --mount type=volume,source=wv_dbdata,target=/data --name helper alpine
+cd /home/admin/writerviet/db/db_data
+docker run --mount type=volume,source=writerviet_dbdata,target=/data --name helper alpine
 sudo docker cp . helper:/data
+docker rm helper
+
+# initialize web source volume
+cd /home/admin/writerviet/web/source
+docker run --mount type=volume,source=writerviet_websource,target=/data --name helper alpine
+sudo docker cp . helper:/data
+docker rm helper
+
+# initialize Caddyfile volume
+cd /home/admin/writerviet/proxy
+docker run --mount type=volume,source=writerviet_caddyfile,target=/data --name helper alpine
+sudo docker cp . helper:/data
+docker rm helper
+
+# initialize vector config volume
+cd /home/admin/writerviet/logger
+docker run --mount type=volume,source=writerviet_vectorconfig,target=/data --name helper alpine
+sudo docker cp vector.toml helper:/data
 docker rm helper
 
 SCRIPT

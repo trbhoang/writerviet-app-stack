@@ -12,6 +12,29 @@ $ cd .
 $ rsync -avzh --rsync-path="sudo rsync" user@[SERVER_IP]:/var/lib/mysql ./dbdata
 ```
 
+## Backup
+
+### Triggering a backup manually
+
+Sometimes it's useful to trigger a backup manually, e.g right before making some big changes.
+This is as simple as:
+
+```bash
+$ docker-compose exec backup backup.sh
+
+[INFO] Backup starting
+
+8 containers running on host in total
+1 containers marked to be stopped during backup
+
+...
+...
+...
+
+[INFO] Backup finished
+
+```
+
 ## Set correct permission for docker's volumes on host
 
 > in container
