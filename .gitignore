@@ -1,6 +1,8 @@
-.env.sh
+setup/.env.sh
 .vagrant
-share
-app_stack/web/source
-logging_stack/*/.env
-logging_stack/log-server/elasticsearch/data
+web/source
+db/db_data
+proxy/caddy_config
+proxy/caddy_data
+proxy/log
+backup/.env

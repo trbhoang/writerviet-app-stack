@@ -24,8 +24,7 @@ $ sudo ./server_init_harden.sh
 ### Start application services
 
 ```bash
-$ cd tech-stack/app_stack
-$ docker-compose up
+$ docker-compose up -d
 ```
 
 ### Clear testing
@@ -36,3 +35,38 @@ or
 $ vagrant global-status
 $ vagrant destroy <vm id>
 ```
+
+## Rsync db data from server to local
+
+```bash
+$ cd .
+$ rsync -avzh --rsync-path="sudo rsync" user@[SERVER_IP]:/var/lib/mysql ./dbdata
+```
+
+## Backup
+
+### Triggering a backup manually
+
+Sometimes it's useful to trigger a backup manually, e.g right before making some big changes.
+This is as simple as:
+
+```bash
+$ docker-compose exec backup backup.sh
+
+[INFO] Backup starting
+
+8 containers running on host in total
+1 containers marked to be stopped during backup
+
+...
+...
+...
+
+[INFO] Backup finished
+
+```
+
+## References
+
+- [How To Set Up Laravel, Nginx, and MySQL with Docker Compose](https://www.digitalocean.com/community/tutorials/how-to-set-up-laravel-nginx-and-mysql-with-docker-compose)
+- [Docker volumes and file system permissions](https://medium.com/@nielssj/docker-volumes-and-file-system-permissions-772c1aee23ca)

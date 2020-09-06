@@ -1,5 +1,0 @@
-db/db_data
-app/source
-proxy/caddy_config
-proxy/caddy_data
-proxy/log
