@@ -59,8 +59,7 @@ echo -e "APT::Periodic::Update-Package-Lists \"1\";\nAPT::Periodic::Unattended-U
 
 
 # Change the timezone
-echo $TIMEZONE > /etc/timezone
-dpkg-reconfigure -f noninteractive tzdata
+timedatectl set-timezone $TIMEZONE
 
 
 # Change hostname
