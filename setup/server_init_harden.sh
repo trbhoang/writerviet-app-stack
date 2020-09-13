@@ -4,9 +4,7 @@
 #  Remove amazon ssm agent which might become a backdoor
 #  Create sys admin user
 #  Secure ssh
-#  Set timezone to UTC
-#  Install & configure sendmail
-#  Install & configure CSF
+#  Install docker & docker-compose
 #########################################################
 
 
@@ -117,29 +115,6 @@ echo "UseDNS no" | tee --append /etc/ssh/sshd_config
 systemctl reload sshd
 
 
-
-# Install & configure sendmail
-apt-get -y install sendmail
-sed -i "/MAILER_DEFINITIONS/ a FEATURE(\`authinfo', \`hash -o /etc/mail/authinfo/smtp-auth.db\')dnl" /etc/mail/sendmail.mc
-sed -i "/MAILER_DEFINITIONS/ a define(\`confAUTH_MECHANISMS', \`EXTERNAL GSSAPI DIGEST-MD5 CRAM-MD5 LOGIN PLAIN\')dnl" /etc/mail/sendmail.mc
-sed -i "/MAILER_DEFINITIONS/ a TRUST_AUTH_MECH(\`EXTERNAL DIGEST-MD5 CRAM-MD5 LOGIN PLAIN')dnl" /etc/mail/sendmail.mc
-sed -i "/MAILER_DEFINITIONS/ a define(\`confAUTH_OPTIONS', \`A p')dnl" /etc/mail/sendmail.mc
-sed -i "/MAILER_DEFINITIONS/ a define(\`ESMTP_MAILER_ARGS', \`TCP \$h 587')dnl" /etc/mail/sendmail.mc
-sed -i "/MAILER_DEFINITIONS/ a define(\`RELAY_MAILER_ARGS', \`TCP \$h 587')dnl" /etc/mail/sendmail.mc
-sed -i "/MAILER_DEFINITIONS/ a define(\`SMART_HOST', \`[email-smtp.us-east-1.amazonaws.com]')dnl" /etc/mail/sendmail.mc
-
-mkdir /etc/mail/authinfo
-chmod 750 /etc/mail/authinfo
-cd /etc/mail/authinfo
-echo "AuthInfo: \"U:root\" \"I:$SMTP_USER\" \"P:$SMTP_PASS\"" > smtp-auth
-chmod 600 smtp-auth
-makemap hash smtp-auth < smtp-auth
-
-make -C /etc/mail
-systemctl restart sendmail
-echo "Subject: sendmail test" | sendmail -v $SYSADMIN_EMAIL
-
-
 #
 # Install Docker
 #
@@ -152,23 +127,10 @@ sudo apt-get install -y --no-install-recommends docker-ce
 
 # https://www.digitalocean.com/community/questions/how-to-fix-docker-got-permission-denied-while-trying-to-connect-to-the-docker-daemon-socket
 # switch to user SYSADMIN_USER ??? su $SYSADMIN_USER
-sudo usermod -aG docker $USER $SYSADMIN_USER  # may need to logout and login again
-# sudo su
-# su $SYSADMIN_USER
+sudo usermod -aG docker $SYSADMIN_USER  # may need to logout and login again
 docker run hello-world
 
 # Install docker-compose
 sudo wget "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -O /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 docker-compose --version
-
-# Otherwise filebeat cannot access docker's logs
-sudo chmod 666 /var/run/docker.sock
-
-
-#
-# Install Fail2ban
-#
-sudo apt-get -y install fail2ban
-sudo cp ./setup/fail2ban/jail.local /etc/fail2ban/jail.local
-sudo systemctl restart fail2ban
