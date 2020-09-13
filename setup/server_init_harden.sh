@@ -153,8 +153,6 @@ sudo apt-get install -y --no-install-recommends docker-ce
 
 # https://www.digitalocean.com/community/questions/how-to-fix-docker-got-permission-denied-while-trying-to-connect-to-the-docker-daemon-socket
 # switch to user SYSADMIN_USER ??? su $SYSADMIN_USER
-
-sudo groupadd docker
 sudo usermod -aG docker $USER $SYSADMIN_USER  # may need to logout and login again
 # sudo su
 # su $SYSADMIN_USER
@@ -173,5 +171,5 @@ sudo chmod 666 /var/run/docker.sock
 # Install Fail2ban
 #
 sudo apt-get -y install fail2ban
-sudo cp ./fail2ban/jail.local /etc/fail2ban/jail.local
+sudo cp ./setup/fail2ban/jail.local /etc/fail2ban/jail.local
 sudo systemctl restart fail2ban

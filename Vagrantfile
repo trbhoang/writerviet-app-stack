@@ -6,45 +6,45 @@ echo I am provisioning...
 
 cd /vagrant/setup
 sudo ./server_init_harden.sh
-sudo cp -rvf /vagrant/app_stack /home/admin/writerviet
-cd /home/admin/writerviet
+sudo cp -rvf /vagrant ~/writerviet
+cd ~/writerviet
 
 # sudo chmod 0777 forum/data
 # chmod 0777 forum/internal_data
 
-# initialize db data volume
-cd /home/admin/writerviet/db/db_data
-docker run --mount type=volume,source=writerviet_dbdata,target=/data --name helper alpine
-sudo docker cp . helper:/data
-docker rm helper
+# # initialize db data volume
+# cd /home/admin/writerviet/db/db_data
+# docker run --mount type=volume,source=writerviet_dbdata,target=/data --name helper alpine
+# sudo docker cp . helper:/data
+# docker rm helper
 
-# initialize web source volume
-cd /home/admin/writerviet/web/source
-docker run --mount type=volume,source=writerviet_websource,target=/data --name helper alpine
-sudo docker cp . helper:/data
-docker rm helper
+# # initialize web source volume
+# cd /home/admin/writerviet/web/source
+# docker run --mount type=volume,source=writerviet_websource,target=/data --name helper alpine
+# sudo docker cp . helper:/data
+# docker rm helper
 
-# initialize Caddyfile volume
-cd /home/admin/writerviet/proxy
-docker run --mount type=volume,source=writerviet_caddyfile,target=/data --name helper alpine
-sudo docker cp . helper:/data
-docker rm helper
+# # initialize Caddyfile volume
+# cd /home/admin/writerviet/proxy
+# docker run --mount type=volume,source=writerviet_caddyfile,target=/data --name helper alpine
+# sudo docker cp . helper:/data
+# docker rm helper
 
-# initialize vector config volume
-cd /home/admin/writerviet/logger
-docker run --mount type=volume,source=writerviet_vectorconfig,target=/data --name helper alpine
-sudo docker cp vector.toml helper:/data
-docker rm helper
+# # initialize vector config volume
+# cd /home/admin/writerviet/logger
+# docker run --mount type=volume,source=writerviet_vectorconfig,target=/data --name helper alpine
+# sudo docker cp vector.toml helper:/data
+# docker rm helper
 
 SCRIPT
 
 Vagrant.configure("2") do |config|
   # Base VM OS configuration.
-  config.vm.box = "ubuntu/bionic64"
+  config.vm.box = "bento/ubuntu-20.04"
 
   # General VirtualBox VM configuration.
   config.vm.provider :virtualbox do |v|
-    v.name = "writerviet-tech-stack"
+    v.name = "writerviet-app-stack"
     v.memory = 1024
     v.cpus = 2
     v.linked_clone = true
@@ -57,20 +57,6 @@ Vagrant.configure("2") do |config|
 	#   ssh -p 2222 admin@localhost
 	#   ssh admin@192.168.2.2
 	#
-  # to provision ansible playbook
-  #    vagrant provision
-  #
 	config.vm.network :private_network, ip: "192.168.2.2"
-  # config.vm.network "forwarded_port", guest: 80, host: 8080
-  # config.vm.network "forwarded_port", guest: 443, host: 8043
-  # config.vm.synced_folder ".", "/vagrant"
-
-  # require plugin https://github.com/leighmcculloch/vagrant-docker-compose
-  # config.vagrant.plugins = "vagrant-docker-compose"
-
-  # install docker and docker-compose
-  # config.vm.provision :docker
-  # config.vm.provision :docker_compose
-
   config.vm.provision "shell", inline: $script
 end
