@@ -66,6 +66,13 @@ $ docker-compose exec backup backup.sh
 
 ```
 
+## Fail2ban
+
+### Initialize data volume
+
+Create `fail2bandata` volume
+Copy ./fail2ban/data/jail.d to `fail2bandata` volume
+
 ## References
 
 - [How To Set Up Laravel, Nginx, and MySQL with Docker Compose](https://www.digitalocean.com/community/tutorials/how-to-set-up-laravel-nginx-and-mysql-with-docker-compose)
