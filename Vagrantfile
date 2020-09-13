@@ -9,18 +9,6 @@ sudo ./server_init_harden.sh
 sudo cp -rvf /vagrant/app_stack /home/admin/writerviet
 cd /home/admin/writerviet
 
-echo Set correct permissions for volumes
-
-# chown -R root:2000 db/db_data
-# chmod -R 775 db/db_data
-# chmod g+s db/db_data
-
-# chown -R root:2001 app/source
-# chmod -R 775 app/source
-# chmod g+s app/source
-
-# docker-compose up
-
 # sudo chmod 0777 forum/data
 # chmod 0777 forum/internal_data
 
