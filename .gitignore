@@ -6,3 +6,5 @@ proxy/caddy_config
 proxy/caddy_data
 proxy/log
 backup/.env
+fail2ban/.env
+fail2ban/data

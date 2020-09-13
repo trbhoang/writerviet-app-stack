@@ -1,54 +1,68 @@
 version: "3.7"
 services:
-  proxy:
-    image: caddy:2.1.1-alpine
-    volumes:
-      - websource:/var/www
-      - caddyfile:/etc/caddy
-      - caddydata:/data
-      - caddyconfig:/config
-    ports:
-      - 80:80
-      - 443:443
-    depends_on:
-      - web
+  # proxy:
+  #   image: caddy:2.1.1-alpine
+  #   volumes:
+  #     - websource:/var/www
+  #     - caddyfile:/etc/caddy
+  #     - caddydata:/data
+  #     - caddyconfig:/config
+  #   ports:
+  #     - 80:80
+  #     - 443:443
+  #   depends_on:
+  #     - web
 
-  web:
-    build: web
-    volumes:
-      - websource:/var/www
-      - phpconf:/usr/local/etc/php/conf.d
-    depends_on:
-      - db
+  # web:
+  #   build: web
+  #   volumes:
+  #     - websource:/var/www
+  #     - phpconf:/usr/local/etc/php/conf.d
+  #   depends_on:
+  #     - db
 
-  db:
-    image: mariadb:10.4
-    volumes:
-      - dbdata:/var/lib/mysql
-    restart: always
+  # db:
+  #   image: mariadb:10.4
+  #   volumes:
+  #     - dbdata:/var/lib/mysql
+  #   restart: always
 
-  backup:
-    build: backup
+  # backup:
+  #   build: backup
+  #   env_file:
+  #     - ./backup/.env
+  #   volumes:
+  #     - resticcache:/root/.cache/restic
+  #     - dbdata:/data/volumes/dbdata:ro
+  #     - websource:/data/volumes/websource:ro
+  #     - caddyfile:/data/volumes/caddyfile:ro
+  #     - caddydata:/data/volumes/caddydata:ro
+  #     - caddyconfig:/data/volumes/caddyconfig:ro
+  #     - phpconf:/data/volumes/phpconf:ro
+  #     - vectorconfig:/data/volumes/vectorconfig:ro
+  #   restart: always
+
+  # logger:
+  #   image: timberio/vector:0.10.0-alpine
+  #   volumes:
+  #     - vectorconfig:/etc/vector
+  #     - vectordata:/var/lib/vector
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #   restart: on-failure
+
+  fail2ban:
+    image: crazymax/fail2ban:0.11.1
+    container_name: fail2ban
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    volumes:
+      - ./fail2ban/data:/data
+      - /var/log:/var/log:ro
     env_file:
-      - ./backup/.env
-    volumes:
-      - resticcache:/root/.cache/restic
-      - dbdata:/data/volumes/dbdata:ro
-      - websource:/data/volumes/websource:ro
-      - caddyfile:/data/volumes/caddyfile:ro
-      - caddydata:/data/volumes/caddydata:ro
-      - caddyconfig:/data/volumes/caddyconfig:ro
-      - phpconf:/data/volumes/phpconf:ro
-      - vectorconfig:/data/volumes/vectorconfig:ro
+      - ./fail2ban/.env
     restart: always
-
-  logger:
-    image: timberio/vector:0.10.0-alpine
-    volumes:
-      - vectorconfig:/etc/vector
-      - vectordata:/var/lib/vector
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    restart: on-failure
 
 volumes:
   dbdata:
