@@ -1,6 +1,7 @@
 .vagrant
 setup/.env.sh
 
+services/.env
 services/web/source
 services/db/db_data
 services/proxy/caddy_config
