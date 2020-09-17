@@ -1,6 +1,6 @@
 version: "3.7"
 services:
-  proxy:
+  caddy:
     image: caddy:2.1.1-alpine
     volumes:
       - websource:/var/www
@@ -27,10 +27,10 @@ services:
       - dbdata:/var/lib/mysql
     restart: always
 
-  backup:
-    build: backup
+  restic:
+    build: restic
     env_file:
-      - ./backup/.env
+      - ./restic/.env
     volumes:
       - resticcache:/root/.cache/restic
       - dbdata:/data/volumes/dbdata:ro
@@ -42,7 +42,7 @@ services:
       - vectorconfig:/data/volumes/vectorconfig:ro
     restart: always
 
-  logger:
+  vector:
     image: timberio/vector:0.10.0-alpine
     volumes:
       - vectorconfig:/etc/vector
