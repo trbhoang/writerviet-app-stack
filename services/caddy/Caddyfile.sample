@@ -2,6 +2,10 @@ writerviet.local
 
 log
 
+basicauth /* {
+	HoangTran fasdfasdfasdfasdfasdfsdfasdfMYkF3MFZhZ3VtV3E1SzBWZEZ5Q3VWc0tlkjflkalsdflajdflsdjf
+}
+
 handle /demchu/* {
     root * /var/www
     file_server

@@ -4,8 +4,7 @@ setup/.env.sh
 services/.env
 services/web/source
 services/db/db_data
-services/proxy/caddy_config
-services/proxy/caddy_data
+services/caddy/Caddyfile
 services/proxy/log
 services/backup/.env
 services/fail2ban/.env
