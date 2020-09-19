@@ -66,6 +66,13 @@ $ docker-compose exec backup backup.sh
 
 ```
 
+### Restore backup from a snapshot
+
+- Set volumes mount permission of restic service to writable
+- restart docker-compose
+- `docker-compose exec restic /bin/sh`
+- `restic restore <snapshot id> --target /`
+
 ## Fail2ban
 
 ### Initialize data volume
