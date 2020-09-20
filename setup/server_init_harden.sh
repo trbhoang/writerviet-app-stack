@@ -23,7 +23,6 @@ sudo apt-get remove snapd -y --purge
 sudo apt-get remove mdadm -y --purge
 sudo apt-get remove policykit-1 -y --purge
 sudo apt-get remove open-iscsi -y --purge
-sudo systemctl stop getty@tty1
 
 # remove git
 sudo apt-get remove git -y --purge
