@@ -10,3 +10,5 @@ services/backup/.env
 services/fail2ban/.env
 services/fail2ban/data
 services/restic/repo
+
+data

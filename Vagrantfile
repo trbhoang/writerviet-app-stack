@@ -30,6 +30,12 @@ cd ~/writerviet
 # sudo docker cp . helper:/data
 # docker rm helper
 
+# # initialize fail2ban config volume
+# cd /home/admin/writerviet/fail2ban
+# docker run --mount type=volume,source=writerviet_fail2bandata,target=/data --name helper alpine
+# sudo docker cp . helper:/data
+# docker rm helper
+
 # # initialize vector config volume
 # cd /home/admin/writerviet/logger
 # docker run --mount type=volume,source=writerviet_vectorconfig,target=/data --name helper alpine

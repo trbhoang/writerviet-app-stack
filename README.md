@@ -36,11 +36,30 @@ $ vagrant global-status
 $ vagrant destroy <vm id>
 ```
 
-## Rsync db data from server to local
+## Database
+
+### Grant access
+
+Must grant correct access privileges for user, otherwise other services cannot connect db.
+
+```bash
+CREATE USER 'writerviet'@'%' IDENTIFIED BY 'user_password';
+GRANT SELECT, INSERT, UPDATE, DELETE ON `writervietdb`.* TO `writerviet`@`%`;
+```
+
+### Rsync db data from server to local
 
 ```bash
 $ cd .
 $ rsync -avzh --rsync-path="sudo rsync" user@[SERVER_IP]:/var/lib/mysql ./dbdata
+```
+
+```
+rsync -avzh --rsync-path="sudo rsync" admin@94.237.76.105:/var/lib/mysql ./dbdata
+rsync -avzh --rsync-path="sudo rsync" ./dbdata hoang23@94.237.78.131:~/writerviet-app-stack/data
+
+rsync -avzh --rsync-path="sudo rsync" admin@94.237.76.105:/var/www/writerviet.com/web ./websource
+rsync -avzh --rsync-path="sudo rsync" ./websource hoang23@94.237.78.131:~/writerviet-app-stack/data
 ```
 
 ## Backup
