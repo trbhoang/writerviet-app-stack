@@ -27,21 +27,6 @@ services:
       - dbdata:/var/lib/mysql
     restart: always
 
-  restic:
-    build: restic
-    env_file:
-      - ./restic/.env
-    volumes:
-      - resticcache:/root/.cache/restic
-      - dbdata:/data/volumes/dbdata:ro
-      - websource:/data/volumes/websource:ro
-      - caddyfile:/data/volumes/caddyfile:ro
-      - caddydata:/data/volumes/caddydata:ro
-      - caddyconfig:/data/volumes/caddyconfig:ro
-      - phpconf:/data/volumes/phpconf:ro
-      - vectorconfig:/data/volumes/vectorconfig:ro
-    restart: always
-
   vector:
     image: timberio/vector:0.10.0-alpine
     volumes:
@@ -72,5 +57,4 @@ volumes:
   phpconf:
   vectorconfig:
   vectordata:
-  resticcache:
   fail2bandata:
