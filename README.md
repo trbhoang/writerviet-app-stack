@@ -38,6 +38,12 @@ $ vagrant destroy <vm id>
 
 ## Database
 
+### Database administering
+
+```bash
+docker run --link writerviet_db_1:db --network writerviet_default -p 8080:8080 adminer
+```
+
 ### Grant access
 
 Must grant correct access privileges for user, otherwise other services cannot connect db.
