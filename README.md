@@ -42,9 +42,12 @@ $ vagrant destroy <vm id>
 
 ```bash
 docker run --link writerviet_db_1:db --network writerviet_default -p 8080:8080 adminer
+
+docker run --name=mk-mysql -p3306:3306 -v writerviet_dbdata:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=xxx -d mysql:8.0.21
+docker run --link mk-mysql:db -p 8080:8080 adminer
 ```
 
-### Grant access
+### Create new user & grant access
 
 Must grant correct access privileges for user, otherwise other services cannot connect db.
 
