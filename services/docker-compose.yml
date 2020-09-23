@@ -23,8 +23,8 @@ services:
 
   db:
     image: mysql:8.0.21
-    security_opt:
-      - seccomp:unconfined
+    cap_add:
+      - SYS_NICE # CAP_SYS_NICE
     volumes:
       - dbdata:/var/lib/mysql
     restart: always
