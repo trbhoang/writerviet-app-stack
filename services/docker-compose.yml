@@ -22,7 +22,9 @@ services:
       - db
 
   db:
-    image: mariadb:10.4
+    image: mysql:8.0.21
+    security_opt:
+      - seccomp:unconfined
     volumes:
       - dbdata:/var/lib/mysql
     restart: always
