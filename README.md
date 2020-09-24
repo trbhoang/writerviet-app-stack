@@ -108,7 +108,17 @@ $ docker-compose exec backup backup.sh
 Create `fail2bandata` volume
 Copy ./fail2ban/data/jail.d to `fail2bandata` volume
 
+## Deployment
+
+### Deploying changes
+
+```bash
+$ docker-compose build web
+$ docker-compose up --no-deps -d web
+```
+
 ## References
 
 - [How To Set Up Laravel, Nginx, and MySQL with Docker Compose](https://www.digitalocean.com/community/tutorials/how-to-set-up-laravel-nginx-and-mysql-with-docker-compose)
 - [Docker volumes and file system permissions](https://medium.com/@nielssj/docker-volumes-and-file-system-permissions-772c1aee23ca)
+- [User docker compose in production](https://docs.docker.com/compose/production/)
