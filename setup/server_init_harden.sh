@@ -55,6 +55,10 @@ echo -e "APT::Periodic::Update-Package-Lists \"1\";\nAPT::Periodic::Unattended-U
 /etc/init.d/unattended-upgrades restart
 
 
+# Change the timezone
+timedatectl set-timezone $TIMEZONE
+
+
 # Change hostname
 hostnamectl set-hostname $HOST_NAME
 sed -i "1i 127.0.1.1 $HOST_DNS $HOST_NAME" /etc/hosts

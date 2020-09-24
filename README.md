@@ -65,10 +65,10 @@ $ rsync -avzh --rsync-path="sudo rsync" user@[SERVER_IP]:/var/lib/mysql ./dbdata
 
 ```
 rsync -avzh --rsync-path="sudo rsync" admin@94.237.76.105:/var/lib/mysql ./dbdata
-rsync -avzh --rsync-path="sudo rsync" ./dbdata hoang23@94.237.78.131:~/writerviet-app-stack/data
+rsync -avzh --rsync-path="sudo rsync" ./dbdata hoang23@94.237.78.131:~/writerviet/app-stack/data
 
 rsync -avzh --rsync-path="sudo rsync" admin@94.237.76.105:/var/www/writerviet.com/web ./websource
-rsync -avzh --rsync-path="sudo rsync" ./websource hoang23@94.237.78.131:~/writerviet-app-stack/data
+rsync -avzh --rsync-path="sudo rsync" ./websource hoang23@94.237.78.131:~/writerviet/app-stack/data
 ```
 
 ## Backup
