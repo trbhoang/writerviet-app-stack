@@ -5,6 +5,7 @@ services/.env
 services/web/source
 services/db/db_data
 services/caddy/Caddyfile
+services/caddy/Caddyfile.local
 services/proxy/log
 services/backup/.env
 services/fail2ban/.env

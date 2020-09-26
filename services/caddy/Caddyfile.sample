@@ -1,5 +1,11 @@
 writerviet.local
 
+@static {
+    path /demchu/* /data/* /js/* /styles/*
+}
+
+header @static Cache-Control max-age=604800
+
 log
 
 basicauth /* {
