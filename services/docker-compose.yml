@@ -17,7 +17,6 @@ services:
     build: web
     volumes:
       - websource:/var/www
-      - phpconf:/usr/local/etc/php/conf.d
     depends_on:
       - db
 
