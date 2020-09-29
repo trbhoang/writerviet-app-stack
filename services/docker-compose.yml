@@ -55,7 +55,6 @@ volumes:
   caddyfile:
   caddydata:
   caddyconfig:
-  phpconf:
   # vectorconfig:
   # vectordata:
   fail2bandata:
