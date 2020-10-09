@@ -103,6 +103,8 @@ then
     # configure idle timeout interval (10 mins)
     echo "ClientAliveInterval 600" | tee --append /etc/ssh/sshd_config
     echo "ClientAliveCountMax 3" | tee --append /etc/ssh/sshd_config
+    echo "MaxAuthTries 3" | tee --append /etc/ssh/sshd_config
+    echo "MaxSessions 3" | tee --append /etc/ssh/sshd_config
 fi
 
 # disable port forwarding (yes: to support connecting from localhost)
